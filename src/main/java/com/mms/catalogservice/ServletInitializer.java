@@ -1,4 +1,4 @@
-package com.mms.catalog_service;
+package com.mms.catalogservice;
 
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;

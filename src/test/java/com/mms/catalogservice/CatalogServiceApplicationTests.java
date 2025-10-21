@@ -1,4 +1,4 @@
-package com.mms.catalog_service;
+package com.mms.catalogservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
