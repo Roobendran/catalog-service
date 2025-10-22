@@ -15,7 +15,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductDTO findById(String id) {
+    public ProductDTO findById(Long id) {
         return null;
     }
 
@@ -26,6 +26,6 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> findByCategory(String category) {
-        return null;
+        return new ArrayList<>();
     }
 }
