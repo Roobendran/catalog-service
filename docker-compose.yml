@@ -27,6 +27,7 @@ services:
     restart: always
     volumes:
       - catalog_mysql_data:/var/lib/mysql
+      - ./data:/docker-entrypoint-initdb.d
     environment:
       MYSQL_ROOT_PASSWORD: rootcatalogpassword
       MYSQL_DATABASE: catalogservice
