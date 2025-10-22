@@ -1,7 +1,6 @@
 plugins {
 	id 'java'
-	id 'war'
-	id 'org.springframework.boot' version '3.5.6'
+	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -19,6 +18,15 @@ java {
 	}
 }
 
+// ✅ This ensures we build a JAR, not a WAR
+bootJar {
+	enabled = true
+}
+
+jar {
+	enabled = false // Spring Boot handles packaging
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
@@ -31,18 +39,19 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
-	//implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testng:testng:7.10.2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
 }
