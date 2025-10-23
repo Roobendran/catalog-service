@@ -12,7 +12,8 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      - mysql-db
+      mysql-db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3306/catalogservice?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATASOURCE_USERNAME: cataloguser
@@ -27,7 +28,11 @@ services:
     restart: always
     volumes:
       - catalog_mysql_data:/var/lib/mysql
-      - ./data:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "cataloguser", "-pmycatalog123" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
     environment:
       MYSQL_ROOT_PASSWORD: rootcatalogpassword
       MYSQL_DATABASE: catalogservice
