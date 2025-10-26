@@ -18,5 +18,5 @@ public class ProductDTO {
     private OnlineStatus onlineStatus;
     private String fullDescription;
     private String shortDescription;
-    private List<CategoryDTO> associatedCategories;
+//    private List<CategoryDTO> associatedCategories;
 }

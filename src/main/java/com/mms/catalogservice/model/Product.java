@@ -18,5 +18,5 @@ public class Product {
     private OnlineStatus onlineStatus;
     private String fullDescription;
     private String shortDescription;
-    private List<Category> associatedCategories;
+//    private List<Category> associatedCategories;
 }
