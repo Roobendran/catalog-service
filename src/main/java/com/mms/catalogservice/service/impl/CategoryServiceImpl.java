@@ -13,16 +13,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.naming.OperationNotSupportedException;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
+    public static final String DEFAULT_ROOT_CATEGORY = "MediaMarkt_DE";
     Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     @Autowired
@@ -108,12 +106,19 @@ public class CategoryServiceImpl implements CategoryService {
     public List<String> getParentCategoryNames(Long id) {
         logger.info("Getting 3 Parent Category names for Category Id: {}", id );
         List<CategoryPath> parentCategories = categoryRepository.findParentCategoryPath(id);
+
         logger.info("Fetched 3 Parent Categories for Category Id: {} is {}", id, parentCategories );
-        return parentCategories.stream()
+        List<String> result = parentCategories.stream()
                 .map(cp -> Stream.of(cp.getImmediateSecondParentName(), cp.getImmediateFirstParentName(), cp.getCurrentName())
-                                .filter(Objects::nonNull)
-                                .collect(Collectors.joining(Category.PARENT_CATEGORY_DELIMITER)))
-                .toList();
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.joining(Category.PARENT_CATEGORY_DELIMITER))
+                )
+                .collect(Collectors.toCollection(ArrayList::new));
+
+        if (result.size() < 3) {
+            result.add(0, DEFAULT_ROOT_CATEGORY);
+        }
+        return result;
     }
 
     private void fillParentCategoryNames(Category category) {
