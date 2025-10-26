@@ -7,9 +7,10 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CategoryEntityMapper.class)
 public interface ProductEntityMapper {
+    @Mapping(target = "categories", source = "associatedCategories")
     @Mapping(target = "longDescription", source = "fullDescription")
-    ProductEntity map(Product product);
-    List<ProductEntity> map(List<Product> products);
+    ProductEntity mapToEntity(Product product);
+    List<ProductEntity> mapToEntity(List<Product> products);
 }

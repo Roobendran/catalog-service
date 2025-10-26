@@ -61,16 +61,17 @@ public class CategoryServiceImplTest {
 
     @Test
     void whenCreateCategoryCalledShouldSaveAndReturnCategory() throws OperationNotSupportedException {
-        Category Category = CategoryObjectMother.ANY;
+        Category category = CategoryObjectMother.ANY;
 
-        when(categoryEntityMapper.map(Category)).thenReturn(CategoryEntityObjectMother.ANY);
+        when(categoryEntityMapper.map(category)).thenReturn(CategoryEntityObjectMother.ANY);
         when(categoryRepository.save(CategoryEntityObjectMother.ANY)).thenReturn(CategoryEntityObjectMother.ANY);
-        when(categoryMapper.mapFromEntity(CategoryEntityObjectMother.ANY)).thenReturn(Category);
+        when(categoryRepository.existsById(CategoryEntityObjectMother.ANY.getParentId())).thenReturn (true);
+        when(categoryMapper.mapFromEntity(CategoryEntityObjectMother.ANY)).thenReturn(category);
 
-        Category createdCategory = categoryServiceImpl.createCategory(Category);
+        Category createdCategory = categoryServiceImpl.createCategory(category);
 
         Assert.assertNotNull(createdCategory);
-        Assert.assertEquals(createdCategory.getName(), Category.getName());
+        Assert.assertEquals(createdCategory.getName(), category.getName());
 
         verify(categoryRepository, times(1)).save(CategoryEntityObjectMother.ANY);
     }

@@ -5,10 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 public class Product {
     @NotNull
@@ -18,5 +20,5 @@ public class Product {
     private OnlineStatus onlineStatus;
     private String fullDescription;
     private String shortDescription;
-//    private List<Category> associatedCategories;
+    private List<Category> associatedCategories;
 }

@@ -62,7 +62,7 @@ public class ProductServiceImplTest {
     void whenCreateProductCalledShouldSaveAndReturnProduct() {
         Product product = ProductObjectMother.ANY_RADIO_PRODUCT;
 
-        when(productEntityMapper.map(product)).thenReturn(ProductEntityObjectMother.ANY);
+        when(productEntityMapper.mapToEntity(product)).thenReturn(ProductEntityObjectMother.ANY);
         when(productRepository.save(ProductEntityObjectMother.ANY)).thenReturn(ProductEntityObjectMother.ANY);
         when(productMapper.mapFromEntity(ProductEntityObjectMother.ANY)).thenReturn(product);
 

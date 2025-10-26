@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name="products")
 @Data
@@ -30,4 +32,18 @@ public class ProductEntity {
 
     @Column(name = "short_description")
     private String shortDescription;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "product_category_map",
+            joinColumns = @JoinColumn(
+                    name = "product_id",
+                    foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
+            ),
+            inverseJoinColumns = @JoinColumn(
+                    name = "category_id",
+                    foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
+            )
+    )
+    private List<CategoryEntity> categories;
 }

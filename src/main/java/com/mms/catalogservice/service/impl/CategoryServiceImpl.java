@@ -116,10 +116,12 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     private void validateCategory(Category category) throws OperationNotSupportedException {
-        //TODO: check categories availability
         if(categoryRepository.existsByName(category.getName()) ||
                 categoryRepository.existsById(category.getId())) {
-            throw new OperationNotSupportedException("Category Validation as the Category is already present");
+            throw new OperationNotSupportedException("Category Validation failed as the Category is already present");
+        }
+        if(category.getParentId() != null && !categoryRepository.existsById(category.getParentId())) {
+            throw new OperationNotSupportedException("Category Validation failed as the Parent Category is not present");
         }
     }
 }

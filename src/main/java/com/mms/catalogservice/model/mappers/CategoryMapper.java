@@ -6,8 +6,10 @@ import com.mms.catalogservice.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +26,7 @@ public interface CategoryMapper {
 
     @Named("fullPathToCategoriesNameList")
     static List<String> fullPathToCategoriesNameList(String categories) {
+        if(categories == null) return null;
         return Arrays.asList(categories.split(Category.PARENT_CATEGORY_DELIMITER));
     }
 }
