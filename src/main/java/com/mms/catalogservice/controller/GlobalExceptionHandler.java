@@ -20,16 +20,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler({NoSuchElementException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleNoSuchElementException(Exception exception, HttpServletRequest request){
+    public ResponseEntity<String> handleNoSuchElementException(Exception exception, HttpServletRequest request) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({OperationNotSupportedException.class})
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleOperationNotSupportedException(Exception exception, HttpServletRequest request){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleOperationNotSupportedException(Exception exception, HttpServletRequest request) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-
-
 }
+
