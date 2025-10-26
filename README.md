@@ -10,14 +10,14 @@ This microservice provides a foundational, RESTful API layer for product and cat
 
 We utilize a focused set of tools to ensure agility, stability, and maintainability:
 
-| Component | Choice & Rationale                                                                           |
-| :--- |:---------------------------------------------------------------------------------------------|
-| **Framework** | **Spring Boot 3.x**                                                                          |
-| **Database** | **MySQL**                                                                                    |
-| **Migrations** | **Flyway**                                                                                   |
-| **API Documentation** | **Springdoc OpenAPI (Swagger)**                      |
-| **Data Loading** | Custom **XLSX Data Loader**           |
-| **Containerization** | **Docker & Docker Compose** for local development parity and dependency orchestration.       |
+| Component | Choice                                                                                    |
+| :--- |:------------------------------------------------------------------------------------------|
+| **Framework** | **Spring Boot 3.x**                                                                       |
+| **Database** | **MySQL**                                                                                 |
+| **Migrations** | **Flyway**                                                                                |
+| **API Documentation** | **Springdoc OpenAPI (Swagger)**                                                           |
+| **Data Loading** | Custom **XLSX Data Loader**                                                               |
+| **Containerization** | **Docker & Docker Compose** for local development parity and dependency orchestration.    |
 
 ---
 
