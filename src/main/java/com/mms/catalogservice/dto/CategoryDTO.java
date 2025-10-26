@@ -12,5 +12,6 @@ public class CategoryDTO {
     private long id;
     @NotBlank
     private String name;
-    private long parentId;
+    private Long parentId;
+    private String fullCategoryPath;
 }
