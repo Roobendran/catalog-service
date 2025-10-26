@@ -20,7 +20,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -94,8 +96,11 @@ public class XLSXDataLoader implements CommandLineRunner {
                         .parentId(parentId)
                         .build();
                 if (!categoryRepository.existsById(category.getId())) {
-                    logger.info("Saving category!");
-                    categoryRepository.save(category);
+                    logger.info("Saving category {}", category);
+                    CategoryEntity categoryEntityDb = categoryRepository.save(category);
+                    logger.info("Saved category {}", categoryEntityDb);
+
+                    logger.info("*****");
                 }
             }
         }
@@ -121,16 +126,35 @@ public class XLSXDataLoader implements CommandLineRunner {
                         .onlineStatus(OnlineStatus.valueOf(onlineStatusStr.trim()))
                         .longDescription(longDesc.trim())
                         .shortDescription(shortDesc.trim())
+                        .categories(loadProductCategories(categoryIdsRaw))
                         .build();
 
                 if (!productRepository.existsByName(product.getName())) {
-                    logger.info("Saving product!");
+                    logger.info("Saving product! {}", product);
                     Long productId = productRepository.save(product).getId();
-                    loadProductCategoryMap(productId, categoryIdsRaw);
+                    logger.info("Saved product! {}", product);
+
+                    logger.info("*****");
+//                    loadProductCategoryMap(productId, categoryIdsRaw);
                 }
             }
         }
     }
+
+    private List<CategoryEntity> loadProductCategories(String categoryIdsRaw) {
+        if (StringUtils.isEmpty(categoryIdsRaw))
+            return null;
+        logger.info("Loading ProductCategories!");
+        List<CategoryEntity> categories = new ArrayList<>();
+        for (String categoryIdStr : categoryIdsRaw.split(";")) {
+            if (StringUtils.isNumeric(categoryIdStr)) {
+                Optional<CategoryEntity> categoryEntityOptional = categoryRepository.findById(Long.parseLong(categoryIdStr));
+                categoryEntityOptional.ifPresent(categories::add);
+            }
+        }
+        return categories;
+    }
+
 
     private void loadProductCategoryMap(Long productId, String categoryIdsRaw) {
         if (StringUtils.isEmpty(categoryIdsRaw))

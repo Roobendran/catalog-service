@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -35,10 +37,11 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category createCategory(Category category) throws OperationNotSupportedException {
         validateCategory(category);
-        category = categoryMapper.mapFromEntity(
-                categoryRepository.save(categoryEntityMapper.map(category)));
-        fillParentCategoryNames(category);
-        return category;
+        categoryRepository.save(categoryEntityMapper.map(category));
+        Category categoryDB = findCategoryByName(category.getName());
+        logger.info("Category Created Id: {}",categoryDB.getId());
+        fillParentCategoryNames(categoryDB);
+        return categoryDB;
     }
 
     @Override
@@ -57,7 +60,6 @@ public class CategoryServiceImpl implements CategoryService {
     private void applyCategoryChanges(CategoryEntity categoryDb, Category category) {
         categoryDb.setName(category.getName());
         categoryDb.setParentId(category.getParentId());
-        //TODO: update Categories
     }
 
     @Override
@@ -87,7 +89,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findCategoryById(Long id) {
         Optional<CategoryEntity> categoryOptional = categoryRepository.findById(id);
-        Category category = categoryOptional.map(categoryEntity -> categoryMapper.mapFromEntity(categoryEntity)).orElse(null);
+        Category category = categoryOptional.map(categoryEntity -> categoryMapper.mapFromEntity(categoryEntity))
+                .orElseThrow(() -> new NoSuchElementException("Category not found with id: " + id));
         fillParentCategoryNames(category);
         return category;
     }
@@ -95,7 +98,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public Category findCategoryByName(String name) {
         Optional<CategoryEntity> categoryOptional = categoryRepository.findByName(name);
-        Category category = categoryOptional.map(categoryEntity -> categoryMapper.mapFromEntity(categoryEntity)).orElse(null);
+        Category category = categoryOptional.map(categoryEntity -> categoryMapper.mapFromEntity(categoryEntity))
+                .orElseThrow(() -> new NoSuchElementException("Category not found with name: " + name));
         fillParentCategoryNames(category);
         return category;
     }
@@ -105,8 +109,10 @@ public class CategoryServiceImpl implements CategoryService {
         logger.info("Getting 3 Parent Category names for Category Id: {}", id );
         List<CategoryPath> parentCategories = categoryRepository.findParentCategoryPath(id);
         logger.info("Fetched 3 Parent Categories for Category Id: {} is {}", id, parentCategories );
-        return parentCategories.stream().map(cp -> String.join(Category.PARENT_CATEGORY_DELIMITER,
-                List.of(cp.getImmediateSecondParentName(), cp.getImmediateFirstParentName(), cp.getCurrentName())))
+        return parentCategories.stream()
+                .map(cp -> Stream.of(cp.getImmediateSecondParentName(), cp.getImmediateFirstParentName(), cp.getCurrentName())
+                                .filter(Objects::nonNull)
+                                .collect(Collectors.joining(Category.PARENT_CATEGORY_DELIMITER)))
                 .toList();
     }
 

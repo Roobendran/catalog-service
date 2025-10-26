@@ -66,6 +66,7 @@ public class CategoryServiceImplTest {
         when(categoryEntityMapper.map(category)).thenReturn(CategoryEntityObjectMother.ANY);
         when(categoryRepository.save(CategoryEntityObjectMother.ANY)).thenReturn(CategoryEntityObjectMother.ANY);
         when(categoryRepository.existsById(CategoryEntityObjectMother.ANY.getParentId())).thenReturn (true);
+        when(categoryRepository.findByName(CategoryEntityObjectMother.ANY.getName())).thenReturn (Optional.of(CategoryEntityObjectMother.ANY));
         when(categoryMapper.mapFromEntity(CategoryEntityObjectMother.ANY)).thenReturn(category);
 
         Category createdCategory = categoryServiceImpl.createCategory(category);
@@ -89,7 +90,7 @@ public class CategoryServiceImplTest {
         Assert.assertEquals(foundCategory.getId(), CategoryId);
     }
 
-    @Test
+    @Test(expectedExceptions = NoSuchElementException.class)
     void whenFindCategoryByIdCalledWithInvalidIdShouldThrowException() {
         Long invalidId = 999L;
 
