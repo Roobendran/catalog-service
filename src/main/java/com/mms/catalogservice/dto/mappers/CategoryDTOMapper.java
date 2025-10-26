@@ -5,6 +5,7 @@ import com.mms.catalogservice.model.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -16,6 +17,6 @@ public interface CategoryDTOMapper {
 
     @Named("categoriesNameListToFullPath")
     static String categoriesNameListToFullPath(List<String> categories) {
-        return String.join(Category.PARENT_CATEGORY_DELIMITER, categories);
+        return CollectionUtils.isEmpty(categories) ? null : String.join(Category.PARENT_CATEGORY_DELIMITER, categories);
     }
 }

@@ -1,6 +1,8 @@
 package com.mms.catalogservice.controller;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.mms.catalogservice.dto.CategoryDTO;
+import com.mms.catalogservice.dto.CategoryViews;
 import com.mms.catalogservice.dto.mappers.CategoryDTOMapper;
 import com.mms.catalogservice.model.mappers.CategoryMapper;
 import com.mms.catalogservice.service.CategoryService;
@@ -24,6 +26,7 @@ public class CategoryController {
     @Autowired
     CategoryMapper categoryMapper;
 
+    @JsonView(CategoryViews.Summary.class)
     @GetMapping
     ResponseEntity<List<CategoryDTO>> getAllCategories() {
         return ResponseEntity.ok(categoryDTOMapper.map(categoryService.findAllCategories()));
