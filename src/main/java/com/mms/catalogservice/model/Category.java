@@ -12,5 +12,5 @@ public class Category {
     private long id;
     @NotBlank
     private String name;
-    private long parentId;
+    private Long parentId;
 }

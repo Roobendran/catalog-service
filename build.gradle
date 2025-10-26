@@ -49,11 +49,25 @@ dependencies {
 	implementation 'org.apache.poi:poi-ooxml:5.2.3'
 	implementation 'commons-io:commons-io:2.11.0'
 
+	implementation 'org.mapstruct:mapstruct:1.6.3'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.jupiter', module: 'junit-jupiter'
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 	testImplementation 'org.testng:testng:7.10.2'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	testImplementation 'org.springframework:spring-test'
+}
+
+tasks.named('test') {
+	useTestNG()
+
+	testLogging {
+		events "passed", "skipped", "failed"
+	}
 }
