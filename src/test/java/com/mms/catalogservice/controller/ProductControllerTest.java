@@ -35,9 +35,6 @@ public class ProductControllerTest {
     @Mock
     ProductDTOMapper productDTOMapper;
 
-    @Mock
-    ProductMapper productMapper;
-
     private AutoCloseable autoCloseable;
 
     @BeforeMethod

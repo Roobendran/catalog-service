@@ -1,5 +1,6 @@
 package com.mms.catalogservice.service.impl;
 
+import com.mms.catalogservice.entity.ProductEntity;
 import com.mms.catalogservice.entity.mappers.ProductEntityMapper;
 import com.mms.catalogservice.model.Product;
 import com.mms.catalogservice.model.mappers.ProductMapper;
@@ -46,81 +47,82 @@ public class ProductServiceImplTest {
         autoCloseable.close();
     }
 
-//    @Test
-//    void whenFindAllProductsCalledThenShouldReturnAllProducts() {
-//        when(productRepository.findAll()).thenReturn(List.of(ProductEntityObjectMother.ANY));
-//
-//        List<Product> products = productServiceImpl.findAllProducts();
-//
-//        Assert.assertEquals(products.size(), 1);
-//        Assert.assertEquals(products.get(0).getId(), ProductObjectMother.ANY.getId());
-//    }
-//
-//    @Test
-//    void whenCreateProductCalledShouldSaveAndReturnProduct() {
-//        Product product = ProductObjectMother.ANY_RADIO_PRODUCT;
-//
-//        when(productEntityMapper.map(product)).thenReturn(ProductEntityObjectMother.ANY);
-//        when(productRepository.save(ProductEntityObjectMother.ANY)).thenReturn(ProductEntityObjectMother.ANY);
-//        when(productMapper.map(ProductEntityObjectMother.ANY)).thenReturn(product);
-//
-//        Product createdProduct = productServiceImpl.createProduct(product);
-//
-//        Assert.assertNotNull(createdProduct);
-//        Assert.assertEquals(createdProduct.getName(), product.getName());
-//
-//        verify(productRepository, times(1)).save(ProductEntityObjectMother.ANY);
-//    }
-//
-//    @Test
-//    void whenFindProductByIdCalled_WithValidId_ShouldReturnProduct() {
-//        Long productId = 100L;
-//
-//        when(productRepository.findById(productId)).thenReturn(Optional.of(ProductEntityObjectMother.ANY));
-//        when(productMapper.map(ProductEntityObjectMother.ANY)).thenReturn(ProductObjectMother.ANY);
-//
-//        Product foundProduct = productServiceImpl.findProductById(productId);
-//
-//        Assert.assertNotNull(foundProduct);
-//        Assert.assertEquals(foundProduct.getId(), productId);
-//    }
-//
-//    @Test(expectedExceptions = {NoSuchElementException.class})
-//    void whenFindProductByIdCalled_WithInvalidId_ShouldThrowException() {
-//        Long invalidId = 999L;
-//
-//        when(productRepository.findById(invalidId)).thenReturn(Optional.empty());
-//
-//        productServiceImpl.findProductById(invalidId);
-//    }
-//
-//    @Test
-//    void whenDeleteProductByIdCalledWithExistingIdShouldReturnTrue() {
-//        Long existingId = 100L;
-//
-//        when(productRepository.existsById(existingId)).thenReturn(true);
-//        doNothing().when(productRepository).deleteById(existingId);
-//
-//        boolean result = productServiceImpl.deleteProduct(existingId);
-//
-//        Assert.assertTrue(result);
-//
-//        verify(productRepository, times(1)).deleteById(existingId);
-//    }
-//
-//    @Test
-//    void whenDeleteProductByIdCalledWithNonExistingIdShouldReturnFalse() {
-//        Long nonExistingId = 999L;
-//
-//        when(productRepository.existsById(nonExistingId)).thenReturn(false);
-//
-//        boolean result = productServiceImpl.deleteProduct(nonExistingId);
-//
-//        Assert.assertFalse(result);
-//
-//        verify(productRepository, never()).deleteById(anyLong());
-//    }
-//
+    @Test
+    void whenFindAllProductsCalledThenShouldReturnAllProducts() {
+        when(productRepository.findAll()).thenReturn(List.of(ProductEntityObjectMother.ANY));
+        when(productMapper.mapFromEntity(anyList())).thenReturn(List.of(ProductObjectMother.ANY));
+
+        List<Product> products = productServiceImpl.findAllProducts();
+
+        Assert.assertEquals(products.size(), 1);
+        Assert.assertEquals(products.get(0).getId(), ProductObjectMother.ANY.getId());
+    }
+
+    @Test
+    void whenCreateProductCalledShouldSaveAndReturnProduct() {
+        Product product = ProductObjectMother.ANY_RADIO_PRODUCT;
+
+        when(productEntityMapper.map(product)).thenReturn(ProductEntityObjectMother.ANY);
+        when(productRepository.save(ProductEntityObjectMother.ANY)).thenReturn(ProductEntityObjectMother.ANY);
+        when(productMapper.mapFromEntity(ProductEntityObjectMother.ANY)).thenReturn(product);
+
+        Product createdProduct = productServiceImpl.createProduct(product);
+
+        Assert.assertNotNull(createdProduct);
+        Assert.assertEquals(createdProduct.getName(), product.getName());
+
+        verify(productRepository, times(1)).save(ProductEntityObjectMother.ANY);
+    }
+
+    @Test
+    void whenFindProductByIdCalledWithValidIdShouldReturnProduct() {
+        Long productId = ProductEntityObjectMother.ANY.getId();
+
+        when(productRepository.findById(productId)).thenReturn(Optional.of(ProductEntityObjectMother.ANY));
+        when(productMapper.mapFromEntity(ProductEntityObjectMother.ANY)).thenReturn(ProductObjectMother.ANY);
+
+        Product foundProduct = productServiceImpl.findProductById(productId);
+
+        Assert.assertNotNull(foundProduct);
+        Assert.assertEquals(foundProduct.getId(), productId);
+    }
+
+    @Test
+    void whenFindProductByIdCalledWithInvalidIdShouldThrowException() {
+        Long invalidId = 999L;
+
+        when(productRepository.findById(invalidId)).thenReturn(Optional.empty());
+
+        productServiceImpl.findProductById(invalidId);
+
+        verify(productMapper, never()).mapFromEntity((ProductEntity) any());
+
+    }
+
+    @Test
+    void whenDeleteProductByIdCalledWithExistingIdShouldDelete() {
+        Long existingId = 100L;
+
+        when(productRepository.existsById(existingId)).thenReturn(true);
+
+        doNothing().when(productRepository).deleteById(existingId);
+
+        productServiceImpl.deleteProduct(existingId);
+
+        verify(productRepository, times(1)).deleteById(existingId);
+    }
+
+    @Test(expectedExceptions = {NoSuchElementException.class})
+    void whenDeleteProductByIdCalledWithNonExistingIdShouldThrowException() {
+        Long nonExistingId = 999L;
+
+        when(productRepository.existsById(nonExistingId)).thenReturn(false);
+
+        productServiceImpl.deleteProduct(nonExistingId);
+
+        verify(productRepository, never()).deleteById(anyLong());
+    }
+
 //    @Test
 //    void whenFindProductByCategoryCalledShouldReturnFilteredProducts() {
 //        String categoryName = "TV";

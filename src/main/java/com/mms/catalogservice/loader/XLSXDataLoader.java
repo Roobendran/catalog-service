@@ -123,7 +123,7 @@ public class XLSXDataLoader implements CommandLineRunner {
                         .shortDescription(shortDesc.trim())
                         .build();
 
-                if (!Objects.nonNull(productRepository.findByName(product.getName()))) {
+                if (!productRepository.existsByName(product.getName())) {
                     logger.info("Saving product!");
                     Long productId = productRepository.save(product).getId();
                     loadProductCategoryMap(productId, categoryIdsRaw);

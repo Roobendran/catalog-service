@@ -30,12 +30,12 @@ public class ProductController {
 
     @PostMapping
     ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        return ResponseEntity.ok(productDTOMapper.map(productService.createProduct(productMapper.map(productDTO))));
+        return ResponseEntity.ok(productDTOMapper.map(productService.createProduct(productMapper.mapFromDTO(productDTO))));
     }
 
     @PutMapping
     ResponseEntity<ProductDTO> updateProduct(@RequestBody ProductDTO productDTO) {
-        return ResponseEntity.ok(productDTOMapper.map(productService.createProduct(productMapper.map(productDTO))));
+        return ResponseEntity.ok(productDTOMapper.map(productService.updateProduct(productMapper.mapFromDTO(productDTO))));
     }
 
     @GetMapping("/id/{id}")
@@ -55,7 +55,8 @@ public class ProductController {
 
     @DeleteMapping("/id/{id}")
     ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        return ResponseEntity.ok(productService.deleteProduct(id) ? "Product Deleted Successfully!" : "Product not Deleted!");
+        productService.deleteProduct(id);
+        return ResponseEntity.ok("Product Deleted Successfully");
     }
 
     @GetMapping("/category/{category}")

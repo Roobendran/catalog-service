@@ -11,9 +11,11 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     @Mapping(target = "fullDescription", source = "fullDescription")
-    Product map(ProductDTO productDTO);
-    List<Product> map(List<ProductDTO> productDTOs);
+    Product mapFromDTO(ProductDTO productDTO);
+    List<Product> mapFromDTO(List<ProductDTO> productDTOs);
 
     @Mapping(target = "fullDescription", source = "longDescription")
-    Product map(ProductEntity productEntity);
+    Product mapFromEntity(ProductEntity productEntity);
+
+    List<Product> mapFromEntity(List<ProductEntity> productEntities);
 }
